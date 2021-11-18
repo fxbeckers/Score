@@ -1,27 +1,29 @@
 import {
+  Alert,
   AppBar,
   Box,
   Button,
   Container,
   CssBaseline,
-  Divider,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Paper,
   Select,
-  Stack,
   TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import DoNotTouchIcon from "@mui/icons-material/DoNotTouch";
-import ScienceIcon from "@mui/icons-material/Science";
 
 const LineItem: React.FC = ({ children }) => {
-  return <Box display="flex" justifyContent="space-between" p={1}>{children}</Box>;
+  return (
+    <Box display="flex" justifyContent="space-between" p={1}>
+      {children}
+    </Box>
+  );
 };
 
 type FormValues = {
@@ -43,9 +45,9 @@ const ControlledSelect: React.FC<{
       name={field}
       defaultValue={""}
       rules={{ required: true }}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <LineItem>
-          <FormControl fullWidth>
+          <FormControl fullWidth error={!!error}>
             <InputLabel>{label}</InputLabel>
             <Select
               value={field.value}
@@ -60,6 +62,7 @@ const ControlledSelect: React.FC<{
                 );
               })}
             </Select>
+            {!!error ? <FormHelperText>{error?.message}</FormHelperText> : null}
           </FormControl>
         </LineItem>
       )}
@@ -76,7 +79,7 @@ const ControlledInput: React.FC<{
       name={field}
       defaultValue={""}
       rules={{ required: true }}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <LineItem>
           <TextField
             fullWidth
@@ -86,6 +89,8 @@ const ControlledInput: React.FC<{
             variant="outlined"
             value={field.value}
             onChange={(e) => field.onChange(e.target.value)}
+            error={!!error}
+            helperText={error?.message}
           />
         </LineItem>
       )}
@@ -94,14 +99,16 @@ const ControlledInput: React.FC<{
 };
 
 function App() {
-  const methods = useForm<FormValues>({defaultValues:{
-    age:'',
-    asa_score:'',
-    gender:'',
-    preop_emoglobin:'',
-    surgical_indication:'',
-    treated_hta:''
-  } as any});
+  const methods = useForm<FormValues>({
+    defaultValues: {
+      age: "",
+      asa_score: "",
+      gender: "",
+      preop_emoglobin: "",
+      surgical_indication: "",
+      treated_hta: "",
+    } as any,
+  });
   const [score, setScore] = useState<number | null>(null);
   const onSubmit = (data: FormValues) => {
     const score =
@@ -118,11 +125,12 @@ function App() {
   const reset = () => {
     methods.reset();
     setScore(null);
-  }
+  };
 
   const doBloodDraw = !!score && score > -4.5676;
-  const resultLabel = doBloodDraw  ? `Pas faire prise de sang` : `Faire prise de sang`;
-  const resultIcon = doBloodDraw ? <ScienceIcon /> : <DoNotTouchIcon />;
+  const resultLabel = doBloodDraw
+    ? `Post-operative blood test NECESSARY`
+    : `Post-operative blood test NOT NECESSARY`;
 
   return (
     <React.Fragment>
@@ -130,7 +138,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Beckers score
+            Saint Luc Score
           </Typography>
         </Toolbar>
       </AppBar>
@@ -190,19 +198,20 @@ function App() {
               </LineItem>
               <LineItem>
                 {!!score ? (
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      divider={<Divider orientation="vertical" flexItem />}
-                      spacing={2}
-                    >
-                      <Box>
-                        {resultIcon}
-                      </Box>
-                      <Box>Score: {score}</Box>
-                      <Box>{resultLabel}</Box>
-                    </Stack>
-                  ) : null}
+                  <Box display="flex" flexDirection="column"  gap={'8px'}>
+                    <TextField
+                      label="Score"
+                      variant="outlined"
+                      value={score}
+                      InputProps={{readOnly:true}}
+                    />
+                    <Alert severity="error">
+                      <Typography variant="h5" component="h5">
+                        {resultLabel}
+                      </Typography>
+                    </Alert>
+                  </Box>
+                ) : null}
               </LineItem>
             </Paper>
           </Container>
