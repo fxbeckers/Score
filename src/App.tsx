@@ -143,7 +143,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <form noValidate onSubmit={methods.handleSubmit(onSubmit)}>
           <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
             <Paper
               variant="outlined"
