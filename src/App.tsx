@@ -138,7 +138,7 @@ function App() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Saint Luc Score
+            THABUS
           </Typography>
         </Toolbar>
       </AppBar>
