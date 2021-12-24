@@ -1,0 +1,8 @@
+{
+  "short_name": "St. Luc Score",
+  "name": "St. Luc Score",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

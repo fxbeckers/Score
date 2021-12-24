@@ -178,7 +178,7 @@ function App() {
               />
               <ControlledSelect
                 field="treated_hta"
-                label="Treated HTA"
+                label="HTA"
                 options={[
                   { label: "Yes", value: 1 },
                   { label: "No", value: 0 },
@@ -205,7 +205,7 @@ function App() {
                       value={score}
                       InputProps={{readOnly:true}}
                     />
-                    <Alert severity="error">
+                    <Alert severity={doBloodDraw ? "error":"success"}>
                       <Typography variant="h5" component="h5">
                         {resultLabel}
                       </Typography>
